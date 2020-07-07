@@ -16,12 +16,12 @@ export function webViewPanel(context: vscode.ExtensionContext) {
   const innerHtml = `<h1>Hello Web View</h1>`;
   panel.webview.html = getWebViewContent(innerHtml);
 
-  // 2. 周期性改变 html 中的内容，因为是之间给 webview.html 赋值，所以是刷新整个内容
+  // 2. 周期性改变 html 中的内容，因为是z直接给 webview.html 赋值，所以是刷新整个内容
   function changeWebView() {
     const newData = Math.ceil(Math.random() * 100);
     panel.webview.html = getWebViewContent(`${innerHtml}<p>${newData}</p>`);
   }
-  const interval = setInterval(changeWebView, 1000);
+  const interval = setInterval(changeWebView, 10000);
 
   // 3. 可以通过设置 panel.onDidDispose，让 webView 在关闭时执行一些清理工作。
   panel.onDidDispose(
@@ -47,7 +47,7 @@ function getWebViewContent(body: string, pic?: vscode.Uri) {
     <br />
     <img
       id="picture"
-      src="${pic || 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif'}"
+      src="${pic || 'https://raw.githubusercontent.com/zhv9/hellovscode/master/media/cat.jpg'}"
       width="300" />
   </body>
 </html>
@@ -97,7 +97,7 @@ export function webViewWithMessage(context: vscode.ExtensionContext) {
       const onDiskPath = vscode.Uri.file(
         path.join(context.extensionPath, 'media', cat)
       );
-      return currentPanel.webview.asWebviewUri(onDiskPath);
+      return currentPanel ? currentPanel.webview.asWebviewUri(onDiskPath): undefined;
     });
     
     const body = getInnerHtml(cats);
